@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "zachstep05@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isValidPlayer(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 50 &&
+             data.x is number && data.y is number &&
+             data.vx is number && data.vy is number &&
+             data.isAlive is bool &&
+             data.color is string && data.color.size() < 20;
+    }
+
+    function isValidRoom(data) {
+      return data.status in ['waiting', 'counting_down', 'planning', 'executing', 'finished'] &&
+             data.timer is number &&
+             data.platformSize is number &&
+             data.roundCount is number;
+    }
+    
+    match /rooms/{roomId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidRoom(request.resource.data);
+      // Allow any authenticated user to update room (for starting game and phase transitions)
+      allow update: if isAuthenticated() && isValidRoom(request.resource.data);
+      
+      match /players/{uid} {
+        allow read: if isAuthenticated();
+        allow create: if isOwner(uid) && isValidPlayer(request.resource.data);
+        // Allow owner to update their own data, and others to update if they are master (for round cleanup)
+        // Actually, let's simplify: allow any authenticated user to update players in the room
+        // to support the "anyone can start/cleanup" logic, but keep it as restricted as possible.
+        allow update: if isAuthenticated() && isValidPlayer(request.resource.data);
+        allow delete: if isAuthenticated();
+      }
+    }
+    
+    match /leaderboard/{uid} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) || isAuthenticated();
+    }
+  }
+}

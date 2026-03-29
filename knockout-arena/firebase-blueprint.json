@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "Player": {
+      "title": "Player",
+      "description": "A player in a game room",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "vx": { "type": "number" },
+        "vy": { "type": "number" },
+        "isAlive": { "type": "boolean" },
+        "inputVector": {
+          "type": "object",
+          "properties": {
+            "angle": { "type": "number" },
+            "power": { "type": "number" }
+          }
+        },
+        "color": { "type": "string" }
+      },
+      "required": ["name", "x", "y", "vx", "vy", "isAlive", "color"]
+    },
+    "Room": {
+      "title": "Game Room",
+      "description": "A multiplayer game room",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["waiting", "counting_down", "planning", "executing", "finished"] },
+        "timer": { "type": "number" },
+        "platformSize": { "type": "number" },
+        "winnerId": { "type": "string" },
+        "roundCount": { "type": "number" }
+      },
+      "required": ["status", "timer", "platformSize", "roundCount"]
+    },
+    "LeaderboardEntry": {
+      "title": "Leaderboard Entry",
+      "description": "A user's win count",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "wins": { "type": "number" }
+      },
+      "required": ["name", "wins"]
+    }
+  },
+  "firestore": {
+    "/rooms/{roomId}": {
+      "schema": "Room",
+      "description": "Game room data"
+    },
+    "/rooms/{roomId}/players/{uid}": {
+      "schema": "Player",
+      "description": "Player data within a room"
+    },
+    "/leaderboard/{uid}": {
+      "schema": "LeaderboardEntry",
+      "description": "Global leaderboard"
+    }
+  }
+}

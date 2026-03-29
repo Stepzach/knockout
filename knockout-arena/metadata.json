@@ -1,0 +1,5 @@
+{
+  "name": "Knockout Arena",
+  "description": "A mobile-first, 2D top-down multiplayer physics-based fighting game. Launch your circle to knock others off the shrinking platform!",
+  "requestFramePermissions": []
+}
