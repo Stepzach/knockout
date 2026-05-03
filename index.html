@@ -23,7 +23,6 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
 
 <style>
 :root {
@@ -137,6 +136,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .nav-burger {
   display: none; flex-direction: column; gap: 5px;
   padding: 8px; border-radius: var(--r-sm);
+  /* Bigger tap target on mobile */
+  min-width: 44px; min-height: 44px;
+  align-items: center; justify-content: center;
 }
 .nav-burger span {
   display: block; width: 22px; height: 1.5px;
@@ -156,11 +158,15 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .nav-drawer.open { display: block; }
 .nav-drawer a {
-  display: block; padding: 12px 28px;
+  display: block;
+  /* Larger touch targets in mobile drawer */
+  padding: 14px 28px;
   font-size: .72rem; font-weight: 500;
   letter-spacing: .1em; text-transform: uppercase;
   color: var(--ink-mid);
   transition: color .2s, background .2s;
+  min-height: 48px;
+  display: flex; align-items: center;
 }
 .nav-drawer a:hover { color: var(--ink); background: var(--warm); }
 
@@ -205,6 +211,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
   background: var(--ink); color: var(--cream);
   transition: background .25s, transform .2s var(--ease-spring);
+  min-height: 48px;
 }
 .btn-primary:hover { background: var(--ink-mid); transform: translateY(-2px); }
 .btn-ghost {
@@ -213,6 +220,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
   border: 1px solid var(--stone); color: var(--ink-mid);
   transition: border-color .25s, color .25s, transform .2s var(--ease-spring);
+  min-height: 48px;
 }
 .btn-ghost:hover { border-color: var(--ink); color: var(--ink); transform: translateY(-2px); }
 
@@ -287,6 +295,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border: 1px solid var(--sand); color: var(--ink-soft);
   transition: background .2s, border-color .2s, color .2s;
   cursor: pointer;
+  /* Ensure tappable size on mobile */
+  min-height: 44px;
 }
 .gallery-tab:hover { border-color: var(--stone); color: var(--ink-mid); }
 .gallery-tab.active { background: var(--ink); border-color: var(--ink); color: var(--cream); }
@@ -348,6 +358,57 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
+/* MOBILE GALLERY BOTTOM SHEET — replaces hover overlay on touch */
+.gallery-sheet-backdrop {
+  display: none;
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(30,22,16,.45);
+  animation: fadeIn .2s ease;
+}
+.gallery-sheet-backdrop.visible { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.gallery-sheet {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 700;
+  background: var(--cream);
+  border-radius: 20px 20px 0 0;
+  padding: 0 0 env(safe-area-inset-bottom, 16px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(100%);
+  transition: transform .35s var(--ease-out);
+  max-width: 560px;
+  margin: 0 auto;
+}
+.gallery-sheet.open { transform: translateY(0); }
+.gallery-sheet-handle {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: var(--sand); margin: 12px auto 0;
+}
+.gallery-sheet-img {
+  width: 100%; max-height: 240px; object-fit: contain;
+  padding: 16px 24px 8px;
+}
+.gallery-sheet-body { padding: 8px 24px 20px; }
+.gallery-sheet-title {
+  font-family: var(--ff-display);
+  font-size: 1.25rem; color: var(--ink);
+  margin-bottom: 16px;
+}
+.gallery-sheet-actions { display: flex; flex-direction: column; gap: 10px; }
+.sheet-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 15px 20px; border-radius: var(--r-pill);
+  font-size: .72rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+  border: 1px solid var(--sand); color: var(--ink-mid);
+  background: none; cursor: pointer; width: 100%;
+  transition: background .2s, color .2s;
+  min-height: 52px;
+  font-family: var(--ff-sans);
+}
+.sheet-btn.view { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+.sheet-btn.etsy i { color: #f1641e; }
+.sheet-btn.pin i { color: #e60023; }
+
 /* PRINT DETAIL */
 .print-detail-sec {
   padding: 52px 48px 96px;
@@ -362,6 +423,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--stone); margin-bottom: 18px;
   transition: color .2s;
   cursor: pointer;
+  /* Ensure tappable */
+  min-height: 44px;
+  padding: 4px 0;
 }
 .print-back:hover { color: var(--ink-mid); }
 .print-back:hover i { transform: translateX(-3px); }
@@ -425,6 +489,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border: 1px solid var(--sand); color: var(--ink-mid);
   transition: background .25s, transform .2s var(--ease-spring);
   width: 100%;
+  min-height: 52px;
 }
 .print-btn-etsy:hover { background: var(--ink-mid); transform: translateY(-2px); color:var(--cream); }
 .print-btn-etsy i { color: #f1641e; font-size: .9rem; }
@@ -436,6 +501,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border: 1px solid var(--sand); color: var(--ink-mid);
   transition: border-color .25s, color .25s, transform .2s var(--ease-spring);
   width: 100%;
+  min-height: 52px;
 }
 .print-btn-pin:hover { border-color: #e60023; color: #e60023; transform: translateY(-2px); }
 .print-btn-pin i { color: #e60023; font-size: .9rem; }
@@ -477,6 +543,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .footer-links a {
   font-size: .8rem; color: var(--ink-soft); transition: color .2s;
   display: flex; align-items: center; gap: 10px;
+  /* Minimum touch target */
+  min-height: 44px;
 }
 .footer-links a:hover { color: var(--ink); }
 .footer-links i { width: 13px; text-align: center; font-size: .75rem; }
@@ -553,8 +621,25 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .footer-col { border-right: none !important; padding: 24px 20px; }
   .footer-col:nth-child(n+2) { border-top: 1px solid var(--sand); }
   .footer-bottom { padding: 14px 20px; }
+
+  /* Tighter gallery tabs scroll on small screens */
+  .gallery-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    max-width: 100%;
+  }
+  .gallery-tabs::-webkit-scrollbar { display: none; }
+  .gallery-tab { white-space: nowrap; flex-shrink: 0; }
+
+  /* Stack hero buttons on very small screens */
+  .hero-actions { flex-direction: column; gap: 10px; }
+  .btn-primary, .btn-ghost { justify-content: center; width: 100%; max-width: 320px; }
 }
 
+/* Hide hover overlay on touch — bottom sheet handles it instead */
 @media (max-width: 799px) {
   .gallery-overlay { display: none; }
 }
@@ -571,7 +656,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 #page-print.active { display: block; }
 .print-detail-sec { padding-top: 20px; }
 
-/* Find this in your <style> tag and replace it */
+/* description & tags are visually hidden but present in DOM for SEO */
 .print-description,
 .print-tags {
   position: absolute;
@@ -745,6 +830,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </section>
 </main>
 
+<!-- MOBILE GALLERY BOTTOM SHEET -->
+<div class="gallery-sheet-backdrop" id="sheetBackdrop"></div>
+<div class="gallery-sheet" id="gallerySheet" role="dialog" aria-modal="true" aria-label="Print options">
+  <div class="gallery-sheet-handle"></div>
+  <img class="gallery-sheet-img" id="sheetImg" src="" alt="">
+  <div class="gallery-sheet-body">
+    <p class="gallery-sheet-title" id="sheetTitle"></p>
+    <div class="gallery-sheet-actions" id="sheetActions"></div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="site-footer" aria-label="Site footer">
   <div class="footer-top">
@@ -858,25 +954,41 @@ function resetMeta() {
   setMeta('name',     'twitter:image',       '');
 }
 
-/* ══ INTERNAL NAVIGATION — all links use this ══ */
+/* ══ PINTEREST SAVE URL BUILDER ══
+   Uses the official Pinterest /pin/create/button/ endpoint.
+   description = PIN_DESC (or title fallback) — this becomes the pin description.
+   title       = TITLE — Pinterest displays this as the pin title.
+   Both fields are passed correctly so they populate on save.
+══════════════════════════════════ */
+function buildPinUrl(printPageUrl, imgUrl, title, pinDesc) {
+  // Pinterest requires the description to be the "note"/caption that gets saved.
+  // Combine title + description so the saved pin is rich.
+  const combinedDesc = title
+    ? (pinDesc ? title + ' — ' + pinDesc : title)
+    : (pinDesc || '');
+
+  return 'https://www.pinterest.com/pin/create/button/'
+    + '?url='         + encodeURIComponent(printPageUrl)
+    + '&media='       + encodeURIComponent(imgUrl)
+    + '&description=' + encodeURIComponent(combinedDesc);
+}
+
+function openPinterest(pinUrl) {
+  window.open(pinUrl, 'Pinterest', 'width=750,height=550,resizable=yes,scrollbars=yes');
+}
+
+/* ══ INTERNAL NAVIGATION ══ */
 function navigate(path, addToHistory = true) {
-  if (addToHistory) {
-    history.pushState(null, '', path);
-  }
+  if (addToHistory) history.pushState(null, '', path);
   routeFromPath();
 }
 
-/* Intercept every <a> that points to an internal path */
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href]');
   if (!a) return;
   const href = a.getAttribute('href');
-
-  // Let external links, mailto, and target=_blank pass through
   if (!href || href.startsWith('http') || href.startsWith('mailto') || a.target === '_blank') return;
-  // Let /legal and other non-SPA paths through
   if (href === '/legal') return;
-
   e.preventDefault();
   navigate(href);
 });
@@ -907,11 +1019,7 @@ function showPage(id) {
     if (id !== 'print') window.scrollTo({ top: 0, behavior: 'smooth' });
     observeReveals(target);
   }
-
-  // Update active state on nav links
-  document.querySelectorAll('[data-navlink]').forEach(l => {
-    l.classList.remove('active');
-  });
+  document.querySelectorAll('[data-navlink]').forEach(l => l.classList.remove('active'));
   const activeLink = document.querySelector(`[data-navlink="${id}"]`);
   if (activeLink) activeLink.classList.add('active');
 }
@@ -965,9 +1073,7 @@ async function initCarousel() {
   } catch (err) { console.warn('Carousel fetch failed:', err); }
 }
 
-/* ══════════════════════════════════════════
-   DATA LOADING + CATEGORY GROUPING
-═══════════════════════════════════════════ */
+/* ══ DATA LOADING ══ */
 function parseSheetData(rows) {
   categoryOrder.length = 0;
   Object.keys(categoryMap).forEach(k => delete categoryMap[k]);
@@ -1007,21 +1113,89 @@ function renderTabs() {
     btn.className = 'gallery-tab';
     btn.dataset.catSlug = cs;
     btn.textContent = label;
-    btn.addEventListener('click', () => {
-      navigate('/prints/' + cs);
-    });
+    btn.addEventListener('click', () => navigate('/prints/' + cs));
     tabsEl.appendChild(btn);
   });
 }
 
 function switchTab(cs) {
   currentCatSlug = cs;
-
   document.querySelectorAll('.gallery-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.catSlug === cs);
   });
-
   buildGallery(categoryMap[cs]?.rows || []);
+}
+
+/* ══ MOBILE BOTTOM SHEET ══ */
+const sheetBackdrop = document.getElementById('sheetBackdrop');
+const gallerySheet  = document.getElementById('gallerySheet');
+const sheetImg      = document.getElementById('sheetImg');
+const sheetTitle    = document.getElementById('sheetTitle');
+const sheetActions  = document.getElementById('sheetActions');
+
+let sheetOpen = false;
+
+function openSheet(row) {
+  const slug        = row._slug;
+  const imgUrl      = get(row, 'image');
+  const alt         = get(row, 'alt')     || 'Art print';
+  const title       = get(row, 'title')   || 'Art Print';
+  const pinDesc     = get(row, 'pinDesc') || '';
+  const etsyUrl     = get(row, 'etsy')    || '';
+  const printPageUrl = window.location.origin + '/print/' + slug;
+  const pinUrl      = buildPinUrl(printPageUrl, imgUrl, title, pinDesc);
+
+  sheetImg.src = imgUrl;
+  sheetImg.alt = alt;
+  sheetTitle.textContent = title;
+
+  sheetActions.innerHTML = `
+    <button class="sheet-btn view" id="sheetViewBtn">
+      <i class="fas fa-eye"></i> View Print
+    </button>
+    ${etsyUrl ? `<a href="${etsyUrl}" class="sheet-btn etsy" target="_blank" rel="noopener">
+      <i class="fa-brands fa-etsy"></i> Shop on Etsy
+    </a>` : ''}
+    <button class="sheet-btn pin" id="sheetPinBtn">
+      <i class="fa-brands fa-pinterest"></i> Save to Pinterest
+    </button>
+  `;
+
+  document.getElementById('sheetViewBtn').addEventListener('click', () => {
+    closeSheet();
+    navigate('/print/' + slug);
+  });
+
+  document.getElementById('sheetPinBtn').addEventListener('click', () => {
+    openPinterest(pinUrl);
+  });
+
+  sheetBackdrop.classList.add('visible');
+  requestAnimationFrame(() => gallerySheet.classList.add('open'));
+  sheetOpen = true;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheet() {
+  gallerySheet.classList.remove('open');
+  sheetBackdrop.classList.remove('visible');
+  sheetOpen = false;
+  document.body.style.overflow = '';
+}
+
+sheetBackdrop.addEventListener('click', closeSheet);
+
+// Swipe-down to close the sheet
+let touchStartY = 0;
+gallerySheet.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+gallerySheet.addEventListener('touchend', e => {
+  const delta = e.changedTouches[0].clientY - touchStartY;
+  if (delta > 60) closeSheet();
+}, { passive: true });
+
+/* ══ TOUCH DETECTION ══ */
+function isTouchDevice() {
+  return window.matchMedia('(max-width: 799px)').matches;
 }
 
 /* ══ GALLERY RENDERER ══ */
@@ -1038,47 +1212,58 @@ function buildGallery(rows) {
   }
 
   rows.forEach((row, i) => {
-    const slug    = row._slug;
-    const imgUrl  = get(row, 'image');
-    const alt     = get(row, 'alt')     || 'Art print';
-    const etsyUrl = get(row, 'etsy')    || '#';
-    const title   = get(row, 'title')   || 'Art Print';
-    const pinDesc = get(row, 'pinDesc') || '';
+    const slug        = row._slug;
+    const imgUrl      = get(row, 'image');
+    const alt         = get(row, 'alt')     || 'Art print';
+    const etsyUrl     = get(row, 'etsy')    || '#';
+    const title       = get(row, 'title')   || 'Art Print';
+    const pinDesc     = get(row, 'pinDesc') || '';
     const printPageUrl = window.location.origin + '/print/' + slug;
+    const pinUrl      = buildPinUrl(printPageUrl, imgUrl, title, pinDesc);
 
     const item = document.createElement('article');
     item.className = 'gallery-item reveal' + (i % 4 !== 0 ? ` reveal-d${Math.min(i % 4, 4)}` : '');
     item.setAttribute('role', 'listitem');
 
     item.innerHTML = `
-      <img src="${imgUrl}" alt="${alt}"
-           data-pin-url="${printPageUrl}"
-           data-pin-media="${imgUrl}"
-           data-pin-description="${pinDesc}"
-           data-pin-title="${title}" loading="lazy">
+      <img src="${imgUrl}" alt="${alt}" loading="lazy">
       <div class="gallery-overlay" aria-hidden="true">
         <div class="gallery-overlay-links">
           ${etsyUrl !== '#' ? `<a href="${etsyUrl}" class="ov-link etsy" target="_blank" rel="noopener" tabindex="-1">
             <i class="fa-brands fa-etsy"></i> Etsy
           </a>` : ''}
-          <span class="ov-link pin" tabindex="-1">
+          <button class="ov-link pin" tabindex="-1" data-pin-url="${pinUrl}">
             <i class="fa-brands fa-pinterest"></i> Pin
-          </span>
+          </button>
         </div>
       </div>
     `;
 
     item.addEventListener('click', e => {
+      // Don't intercept Etsy link
       if (e.target.closest('.ov-link.etsy')) return;
+
+      // Pinterest button on desktop overlay
+      const pinBtn = e.target.closest('.ov-link.pin');
+      if (pinBtn) {
+        e.preventDefault();
+        openPinterest(pinBtn.dataset.pinUrl);
+        return;
+      }
+
       e.preventDefault();
-      navigate('/print/' + slug);
+
+      if (isTouchDevice()) {
+        openSheet(row);
+      } else {
+        navigate('/print/' + slug);
+      }
     });
 
     grid.appendChild(item);
   });
 
   observeReveals(grid);
-  if (window.PinUtils) window.PinUtils.build();
 }
 
 function loadAllPrints(onReady) {
@@ -1111,35 +1296,26 @@ function openPrint(row, slug) {
 }
 
 function renderPrintPage(row, slug) {
-  const imgUrl   = get(row, 'image');
-  const alt      = get(row, 'alt')     || 'Art print';
-  const title    = get(row, 'title')   || 'Art Print';
-  const pinDesc  = get(row, 'pinDesc') || '';
-  const etsyUrl  = get(row, 'etsy')    || '#';
-  const tagsRaw  = get(row, 'tags');
-  const catLabel = row._catLabel || '';
-  const catSlugVal = row._catSlug || '';
+  const imgUrl      = get(row, 'image');
+  const alt         = get(row, 'alt')     || 'Art print';
+  const title       = get(row, 'title')   || 'Art Print';
+  const pinDesc     = get(row, 'pinDesc') || '';
+  const etsyUrl     = get(row, 'etsy')    || '#';
+  const tagsRaw     = get(row, 'tags');
+  const catLabel    = row._catLabel || '';
+  const catSlugVal  = row._catSlug || '';
 
   const tagsHtml = tagsRaw
     ? tagsRaw.split(',').map(t => `<span class="print-tag">${t.trim()}</span>`).join('')
     : '';
 
   const printPageUrl = window.location.origin + '/print/' + slug;
-  // Inside renderPrintPage(row, slug)
-const pinSaveUrl = 'https://www.pinterest.com/pin/create/button/'
-    + '?url='           + encodeURIComponent(printPageUrl)
-    + '&media='         + encodeURIComponent(imgUrl)
-    + '&description='   + encodeURIComponent(pinDesc) // Keep this clean
-    + '&title='         + encodeURIComponent(title);
+  const pinUrl = buildPinUrl(printPageUrl, imgUrl, title, pinDesc);
 
   document.getElementById('printContent').innerHTML = `
     <div class="print-layout">
       <div class="print-image-wrap">
-        <img src="${imgUrl}" alt="${alt}"
-             data-pin-url="${printPageUrl}"
-             data-pin-media="${imgUrl}"
-             data-pin-description="${pinDesc}"
-             data-pin-title="${title}">
+        <img src="${imgUrl}" alt="${alt}">
       </div>
       <div class="print-info">
         ${catLabel ? `<p class="print-collection-label">${catLabel}</p>` : ''}
@@ -1152,38 +1328,31 @@ const pinSaveUrl = 'https://www.pinterest.com/pin/create/button/'
           <a href="${etsyUrl}" class="print-btn-etsy" target="_blank" rel="noopener">
             <i class="fa-brands fa-etsy"></i> Shop on Etsy
           </a>` : ''}
-         <button 
-  onclick="window.open('${pinSaveUrl}','Pinterest','width=600,height=700');return false;" 
-  class="print-btn-pin"
-  data-pin-custom="true"
-  data-pin-log="button"
-  data-pin-href="${pinSaveUrl}">
-    <i class="fa-brands fa-pinterest"></i> Save to Pinterest
-</button>
+          <button class="print-btn-pin" id="printPinBtn">
+            <i class="fa-brands fa-pinterest"></i> Save to Pinterest
+          </button>
         </div>
       </div>
     </div>
   `;
 
-  // Store catSlug for the back button
-  currentCatSlug = catSlugVal || currentCatSlug || categoryOrder[0] || null;
+  document.getElementById('printPinBtn').addEventListener('click', () => {
+    openPinterest(pinUrl);
+  });
 
-  if (window.PinUtils) window.PinUtils.build();
+  currentCatSlug = catSlugVal || currentCatSlug || categoryOrder[0] || null;
 }
 
-/* Back button — returns to the category the print belongs to */
+/* Back button */
 document.getElementById('printBack').addEventListener('click', () => {
   const cs = currentCatSlug || categoryOrder[0] || '';
   navigate('/prints/' + cs);
 });
 
-/* ══════════════════════════════════════════
-   ROUTER — reads window.location.pathname
-═══════════════════════════════════════════ */
+/* ══ ROUTER ══ */
 function routeFromPath() {
   const path = window.location.pathname;
 
-  /* ── /print/:slug ── detail page */
   const printMatch = path.match(/^\/print\/([^/]+)\/?$/);
   if (printMatch) {
     const slug = printMatch[1];
@@ -1192,27 +1361,16 @@ function routeFromPath() {
       if (row) {
         openPrint(row, slug);
       } else {
-        // slug not found — fall back to gallery
         const cs = currentCatSlug || categoryOrder[0] || null;
-        if (cs) {
-          history.replaceState(null, '', '/prints/' + cs);
-          showPage('menu');
-          switchTab(cs);
-        } else {
-          history.replaceState(null, '', '/prints');
-          showPage('menu');
-        }
+        if (cs) { history.replaceState(null, '', '/prints/' + cs); showPage('menu'); switchTab(cs); }
+        else { history.replaceState(null, '', '/prints'); showPage('menu'); }
       }
     };
-    if (allDataLoaded) {
-      tryOpen();
-    } else {
-      loadAllPrints(tryOpen);
-    }
+    if (allDataLoaded) tryOpen();
+    else loadAllPrints(tryOpen);
     return;
   }
 
-  /* ── /prints/:catSlug ── gallery with specific tab */
   const printsMatch = path.match(/^\/prints\/([^/]+)\/?$/);
   if (printsMatch) {
     const cs = printsMatch[1];
@@ -1221,42 +1379,30 @@ function routeFromPath() {
       const target = categoryMap[cs] ? cs : (categoryOrder[0] || null);
       if (target) switchTab(target);
     };
-    if (allDataLoaded) {
-      activate();
-    } else {
-      loadAllPrints(activate);
-    }
+    if (allDataLoaded) activate();
+    else loadAllPrints(activate);
     return;
   }
 
-  /* ── /prints ── gallery, first tab */
   if (path === '/prints' || path === '/prints/') {
     showPage('menu');
-    const activate = () => {
-      if (categoryOrder.length) switchTab(categoryOrder[0]);
-    };
-    if (allDataLoaded) {
-      activate();
-    } else {
-      loadAllPrints(activate);
-    }
+    const activate = () => { if (categoryOrder.length) switchTab(categoryOrder[0]); };
+    if (allDataLoaded) activate();
+    else loadAllPrints(activate);
     return;
   }
 
-  /* ── / ── home */
   if (path === '/' || path === '') {
     showPage('home');
     resetMeta();
     return;
   }
 
-  /* ── unknown path — fall back to home ── */
   history.replaceState(null, '', '/');
   showPage('home');
   resetMeta();
 }
 
-/* popstate fires when the user hits back/forward */
 window.addEventListener('popstate', routeFromPath);
 
 /* ══ INIT ══ */
@@ -1268,11 +1414,9 @@ window.addEventListener('load', () => {
   const needsGallery = path.startsWith('/prints') || path.startsWith('/print');
 
   if (needsGallery && !allDataLoaded) {
-    // Load data first, then route — avoids double-fetch
     loadAllPrints(() => routeFromPath());
   } else {
     routeFromPath();
-    // Pre-fetch gallery data in the background for faster tab switching
     if (!allDataLoaded) loadAllPrints(null);
   }
 });
