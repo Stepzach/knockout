@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estelle Stephens — Illustrator & Designer</title>
+<meta name="description" content="London-based illustrator & designer. Art prints, commercial assets, animated e-cards, brand identity, and custom commissions.">
+<meta name="theme-color" content="#fdf7ef">
+
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Estelle Stephens">
+<meta property="og:title"       content="Estelle Stephens — Illustrator & Designer">
+<meta property="og:description" content="London-based illustrator & designer.">
+<meta property="og:image"       content="">
+<meta property="og:url"         content="">
+<meta name="twitter:card"       content="summary_large_image">
+<meta name="twitter:title"      content="Estelle Stephens — Illustrator & Designer">
+<meta name="twitter:description" content="London-based illustrator & designer.">
+<meta name="twitter:image"      content="">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
+
+<style>
+:root {
+  --blush:    #f6d9c7;
+  --blush-dk: #f0c8b0;
+  --cream:    #fdf6f0;
+  --warm:     #faf0e8;
+  --sand:     #e8d5c4;
+  --stone:    #c4a898;
+  --ink:      #1e1610;
+  --ink-mid:  #5c4033;
+  --ink-soft: #8a6e62;
+  --red:      #c8363c;
+  --gold:     #a07840;
+
+  --ff-display: 'DM Serif Display', Georgia, serif;
+  --ff-serif:   'Lora', Georgia, serif;
+  --ff-sans:    'DM Sans', system-ui, sans-serif;
+
+  --nav-h: 64px;
+  --max:   1400px;
+  --r-sm:  4px;
+  --r-md:  10px;
+  --r-lg:  20px;
+  --r-pill: 100px;
+
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --shadow-sm: 0 1px 8px rgba(42,31,26,.06);
+  --shadow-md: 0 4px 24px rgba(42,31,26,.10);
+  --shadow-lg: 0 16px 48px rgba(42,31,26,.14);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--ff-sans);
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, video { display: block; width: 100%; height: 100%; object-fit: contain; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* LOADER */
+#loader {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .5s var(--ease-out), visibility .5s;
+}
+#loader.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-mark {
+  font-family: var(--ff-display);
+  font-size: 1.8rem; font-style: italic; color: var(--ink-mid);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.25} 50%{opacity:1} }
+
+/* PAGE SYSTEM */
+.page { display: none; }
+.page.active { display: block; }
+
+/* NAV */
+.nav-wrap {
+  position: sticky; top: 0; z-index: 500;
+  background: rgba(253,246,240,.97);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(200,168,152,.25);
+}
+.nav-inner {
+  max-width: var(--max); margin: 0 auto;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+}
+.brand {
+  display: flex; align-items: center;
+}
+.brand img { width: 52px; height: auto; display: block; }
+
+.nav-list { display: flex; gap: 0; }
+.nav-item a {
+  display: block; padding: 0 18px;
+  line-height: var(--nav-h);
+  font-family: var(--ff-sans);
+  font-size: .7rem; font-weight: 500;
+  letter-spacing: .11em; text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: color .2s;
+  position: relative;
+}
+.nav-item a::after {
+  content: '';
+  position: absolute; bottom: 0; left: 18px; right: 18px;
+  height: 1px; background: var(--gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .3s var(--ease-out);
+}
+.nav-item a:hover,
+.nav-item a.active { color: var(--ink); }
+.nav-item a:hover::after,
+.nav-item a.active::after { transform: scaleX(1); }
+
+.nav-burger {
+  display: none; flex-direction: column; gap: 5px;
+  padding: 8px; border-radius: var(--r-sm);
+}
+.nav-burger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--ink); transition: .3s var(--ease-out);
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; }
+.nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.nav-drawer {
+  display: none;
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: var(--cream);
+  border-bottom: 1px solid var(--sand);
+  padding: 6px 0 14px;
+  box-shadow: var(--shadow-md);
+}
+.nav-drawer.open { display: block; }
+.nav-drawer a {
+  display: block; padding: 12px 28px;
+  font-size: .72rem; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-mid);
+  transition: color .2s, background .2s;
+}
+.nav-drawer a:hover { color: var(--ink); background: var(--warm); }
+
+/* HERO */
+.hero {
+  display: grid;
+  grid-template-columns: 44% 1fr;
+  min-height: calc(100svh - var(--nav-h));
+  background: var(--warm);
+}
+.hero-copy {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 60px;
+  border-right: 1px solid rgba(200,168,152,.3);
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: .66rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 32px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block; width: 24px; height: 1px; background: var(--stone);
+}
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  font-weight: 900; line-height: .92;
+  color: var(--ink); margin-bottom: 32px;
+}
+.hero-title .star { font-style: normal; color: var(--gold); font-size: .65em; vertical-align: middle; opacity: .7; }
+.hero-desc {
+  font-family: var(--ff-serif);
+  font-size: 1.1rem; line-height: 1.75;
+  color: var(--ink-mid); max-width: 420px;
+  margin-bottom: 48px;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; border-radius: var(--r-pill);
+  font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  background: var(--ink); color: var(--cream);
+  transition: background .25s, transform .2s var(--ease-spring);
+}
+.btn-primary:hover { background: var(--ink-mid); transform: translateY(-2px); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: var(--r-pill);
+  font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  border: 1px solid var(--stone); color: var(--ink-mid);
+  transition: border-color .25s, color .25s, transform .2s var(--ease-spring);
+}
+.btn-ghost:hover { border-color: var(--ink); color: var(--ink); transform: translateY(-2px); }
+
+.hero-visual { position: relative; overflow: hidden; background: var(--blush); }
+.carousel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s ease-in-out; }
+.carousel-slide.active { opacity: 1; }
+.carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+/* SECTION SHARED */
+.sec { padding: 96px 48px; }
+.sec-inner { max-width: var(--max); margin: 0 auto; }
+.sec-label {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: .63rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 18px;
+}
+.sec-label::before { content: ''; display: block; width: 18px; height: 1px; background: var(--stone); }
+.sec-title {
+  font-family: var(--ff-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05; color: var(--ink); margin-bottom: 16px;
+}
+.sec-title em { font-style: italic; color: var(--ink-mid); }
+.sec-body {
+  font-family: var(--ff-serif);
+  font-size: 1.1rem; line-height: 1.75;
+  color: var(--ink-mid); max-width: 560px;
+}
+
+/* SERVICES */
+.services { background: var(--warm); }
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin-top: 52px;
+}
+.service-card { display: flex; flex-direction: column; gap: 0; }
+.service-img {
+  overflow: hidden; border-radius: var(--r-md);
+  aspect-ratio: 1;
+  position: relative;
+  background: var(--blush);
+}
+.service-img img, .service-img video {
+  width: 100%; height: 100%; object-fit: contain;
+  transition: transform .8s var(--ease-out);
+}
+.service-card:hover .service-img img,
+.service-card:hover .service-img video { transform: scale(1.04); }
+.service-info { padding: 14px 2px 0; }
+.service-name {
+  font-family: var(--ff-serif);
+  font-size: 1rem; font-weight: 600;
+  color: var(--ink); margin-bottom: 5px;
+}
+.service-desc {
+  font-size: .76rem; color: var(--ink-soft); line-height: 1.5;
+}
+
+/* GALLERY */
+.gallery-sec { background: var(--cream); }
+.gallery-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 40px; gap: 24px; flex-wrap: wrap;
+}
+.gallery-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.gallery-tab {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 9px 20px; border-radius: var(--r-pill);
+  font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  border: 1px solid var(--sand); color: var(--ink-soft);
+  transition: background .2s, border-color .2s, color .2s;
+  cursor: pointer;
+}
+.gallery-tab:hover { border-color: var(--stone); color: var(--ink-mid); }
+.gallery-tab.active { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+
+.gallery-tabs-skeleton { display: flex; gap: 8px; }
+.tab-skel {
+  width: 110px; height: 36px; border-radius: var(--r-pill);
+  background: var(--blush);
+  background-image: linear-gradient(90deg, var(--blush) 0%, var(--warm) 50%, var(--blush) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.gallery-item {
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0px 0px 9px #e8d5c4;
+  border-radius: var(--r-md);
+}
+.gallery-item img {
+  width: 100%; height: 100%; object-fit: contain;
+  transition: transform .6s var(--ease-out);
+}
+.gallery-item:hover img { transform: scale(1.04); }
+
+.gallery-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(30,22,16,.7) 0%, transparent 60%);
+  opacity: 0; transition: opacity .3s;
+  display: flex; align-items: flex-end;
+  padding: 16px;
+  border-radius: var(--r-md);
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay-links { display: flex; gap: 8px; }
+.ov-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: var(--r-pill);
+  background: rgba(253,246,240,.92);
+  font-size: .63rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink); transition: background .2s;
+}
+.ov-link:hover { background: var(--cream); }
+.ov-link.etsy i { color: #f1641e; }
+.ov-link.pin i { color: #e60023; }
+
+/* skeleton */
+.skel-item {
+  aspect-ratio: 1; border-radius: var(--r-md);
+  background: var(--blush);
+  background-image: linear-gradient(90deg, var(--blush) 0%, var(--warm) 50%, var(--blush) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* PRINT DETAIL */
+.print-detail-sec {
+  padding: 52px 48px 96px;
+  background: var(--cream);
+  min-height: calc(100vh - var(--nav-h));
+}
+.print-detail-inner { max-width: 1060px; margin: 0 auto; }
+
+.print-back {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: .68rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 18px;
+  transition: color .2s;
+  cursor: pointer;
+}
+.print-back:hover { color: var(--ink-mid); }
+.print-back:hover i { transform: translateX(-3px); }
+.print-back i { font-size: .85rem; transition: transform .2s var(--ease-out); }
+
+.print-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 64px;
+  align-items: start;
+}
+
+.print-image-wrap {
+  position: sticky;
+  top: calc(var(--nav-h) + 32px);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  max-height: calc(100vh - var(--nav-h) - 80px);
+}
+.print-image-wrap img {
+  width: 100%; height: 100%; object-fit: contain;
+  padding: 24px;
+}
+
+.print-info { padding-top: 4px; }
+
+.print-collection-label {
+  font-size: .63rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.print-collection-label::before { content: ''; display: block; width: 16px; height: 1px; background: var(--stone); }
+
+.print-title {
+  font-family: var(--ff-display);
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  line-height: 1.05; color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.print-description {
+  font-family: var(--ff-serif);
+  font-size: .95rem; line-height: 1.75;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+}
+
+.print-divider {
+  border: none; border-top: 1px solid var(--sand);
+  margin-bottom: 28px;
+}
+
+.print-actions { display: flex; flex-direction: column; gap: 10px; }
+
+.print-btn-etsy {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 15px 28px; border-radius: var(--r-pill);
+  font-size: .72rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+  border: 1px solid var(--sand); color: var(--ink-mid);
+  transition: background .25s, transform .2s var(--ease-spring);
+  width: 100%;
+}
+.print-btn-etsy:hover { background: var(--ink-mid); transform: translateY(-2px); color:var(--cream); }
+.print-btn-etsy i { color: #f1641e; font-size: .9rem; }
+
+.print-btn-pin {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 28px; border-radius: var(--r-pill);
+  font-size: .72rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+  border: 1px solid var(--sand); color: var(--ink-mid);
+  transition: border-color .25s, color .25s, transform .2s var(--ease-spring);
+  width: 100%;
+}
+.print-btn-pin:hover { border-color: #e60023; color: #e60023; transform: translateY(-2px); }
+.print-btn-pin i { color: #e60023; font-size: .9rem; }
+
+.print-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 20px; }
+.print-tag {
+  display: inline-block;
+  padding: 4px 12px; border-radius: var(--r-pill);
+  font-size: .62rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+  background: var(--warm); color: var(--ink-soft);
+  border: 1px solid var(--sand);
+}
+
+/* print loader */
+.print-loading {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 60vh;
+}
+.print-loading-mark {
+  font-family: var(--ff-display);
+  font-size: 1.4rem; font-style: italic; color: var(--ink-mid);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* FOOTER */
+.site-footer { background: var(--warm); border-top: 1px solid var(--sand); }
+.footer-top {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 0;
+}
+.footer-col { padding: 52px 48px; border-right: 1px solid var(--sand); }
+.footer-col:last-child { border-right: none; }
+.footer-col h4 {
+  font-size: .62rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--stone); margin-bottom: 20px;
+}
+.footer-links { display: flex; flex-direction: column; gap: 12px; }
+.footer-links a {
+  font-size: .8rem; color: var(--ink-soft); transition: color .2s;
+  display: flex; align-items: center; gap: 10px;
+}
+.footer-links a:hover { color: var(--ink); }
+.footer-links i { width: 13px; text-align: center; font-size: .75rem; }
+.footer-brand {
+  font-family: var(--ff-display);
+  font-size: 1.15rem; font-style: italic;
+  color: var(--ink-mid); margin-bottom: 12px;
+}
+.footer-tagline {
+  font-size: .8rem; color: var(--ink-soft); line-height: 1.65;
+}
+.footer-bottom {
+  max-width: var(--max); margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  border-top: 1px solid var(--sand);
+  font-size: .68rem; color: var(--ink-soft); letter-spacing: .04em;
+}
+.footer-bottom a { color: var(--ink-soft); transition: color .2s; }
+.footer-bottom a:hover { color: var(--ink-mid); }
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .65s var(--ease-out), transform .65s var(--ease-out);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .08s; }
+.reveal-d2 { transition-delay: .16s; }
+.reveal-d3 { transition-delay: .24s; }
+.reveal-d4 { transition-delay: .32s; }
+.reveal-d5 { transition-delay: .40s; }
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .services-grid { grid-template-columns: repeat(3, 1fr); }
+  .print-layout { grid-template-columns: 1fr 340px; gap: 40px; }
+}
+
+@media (max-width: 960px) {
+  .nav-inner { padding: 0 24px; }
+  .nav-list { display: none; }
+  .nav-burger { display: flex; }
+
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-copy { padding: 52px 28px; order: 2; border-right: none; border-top: 1px solid var(--sand); }
+  .hero-visual { min-height: 55svh; order: 1; }
+  .hero-title { font-size: 2.4rem; }
+
+  .sec { padding: 64px 24px; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+  .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+  .gallery-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+  .print-detail-sec { padding: 36px 24px 80px; }
+  .print-layout { grid-template-columns: 1fr; gap: 28px; }
+  .print-image-wrap { position: relative; top: 0; max-height: 50vh; }
+
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .footer-col { padding: 36px 24px; }
+  .footer-col:nth-child(3) { grid-column: 1/-1; border-right: none; border-top: 1px solid var(--sand); }
+  .footer-bottom { flex-direction: column; gap: 8px; text-align: center; padding: 16px 24px; }
+}
+
+@media (max-width: 640px) {
+  .hero-copy { padding: 36px 20px; }
+  .hero-title { font-size: 2rem; }
+  .hero-desc { font-size: 1rem; }
+  .sec { padding: 48px 20px; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-col { border-right: none !important; padding: 24px 20px; }
+  .footer-col:nth-child(n+2) { border-top: 1px solid var(--sand); }
+  .footer-bottom { padding: 14px 20px; }
+}
+
+@media (max-width: 799px) {
+  .gallery-overlay { display: none; }
+}
+
+/* Print page overlay */
+#page-print {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--cream);
+  overflow-y: auto;
+  display: none;
+}
+#page-print.active { display: block; }
+.print-detail-sec { padding-top: 20px; }
+
+.print-description,
+.print-tags {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  opacity: 0.01;
+  position: absolute;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader" role="status" aria-label="Loading">
+  <span class="loader-mark">ES</span>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav-wrap">
+  <nav class="nav-inner" aria-label="Main navigation">
+    <a href="/" class="brand" aria-label="Estelle Stephens – Home">
+      <img src="https://static.wixstatic.com/media/e9d02f_90b6b493853e4683b47857769f433bc7~mv2.gif" alt="Estelle Stephens" style="width:52px;height:auto;object-fit:contain;">
+    </a>
+    <ul class="nav-list" role="list">
+      <li class="nav-item"><a href="/prints"      data-navlink="prints">Art Prints</a></li>
+      <li class="nav-item"><a href="/"            data-navlink="home">Craft Designs</a></li>
+      <li class="nav-item"><a href="/"            data-navlink="home">Animated E-Cards</a></li>
+      <li class="nav-item"><a href="/"            data-navlink="home">Brand Identity</a></li>
+      <li class="nav-item"><a href="/"            data-navlink="home">Custom</a></li>
+    </ul>
+    <button class="nav-burger" id="navBurger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <nav class="nav-drawer" id="navDrawer" aria-label="Mobile navigation">
+    <a href="/prints" data-navlink="prints">Art Prints</a>
+    <a href="/"       data-navlink="home">Craft Designs</a>
+    <a href="/"       data-navlink="home">Animated E-Cards</a>
+    <a href="/"       data-navlink="home">Brand Identity</a>
+    <a href="/"       data-navlink="home">Custom</a>
+  </nav>
+</div>
+
+<!-- PAGE: HOME -->
+<main id="page-home" class="page active">
+
+  <section class="hero" aria-label="Introduction">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">Based in London, UK</p>
+      <h1 class="hero-title">
+        Illustrator
+        <span class="star">★</span> Designer
+      </h1>
+      <p class="hero-desc">
+        From festival campaigns, social media visuals to bespoke wedding invitations or seasonal graphics, I create cohesive stories for brands and homes alike. Explore my collection of customisable wall art, or let's collaborate to bring a unique, high-impact aesthetic to your next commercial project or private event.
+      </p>
+    </div>
+    <div class="hero-visual" id="heroCarousel" aria-hidden="true"></div>
+  </section>
+
+  <section class="sec services" id="services" aria-labelledby="services-heading">
+    <div class="sec-inner">
+      <p class="sec-label reveal">What I offer</p>
+      <h2 class="sec-title reveal" id="services-heading">Creative <em>Services</em></h2>
+      <div class="services-grid" style="margin-top:52px;">
+
+        <article class="service-card reveal reveal-d1">
+          <div class="service-img">
+            <img src="https://ik.imagekit.io/ngoo36zmk/IMG_7434.png" alt="Collection of framed art prints displayed on a wall" loading="lazy">
+          </div>
+          <div class="service-info">
+            <h3 class="service-name">Art Prints</h3>
+            <p class="service-desc">Premium Giclée prints and instant download-to-print wall art.</p>
+          </div>
+        </article>
+
+        <article class="service-card reveal reveal-d2">
+          <div class="service-img">
+            <img src="https://ik.imagekit.io/ngoo36zmk/IMG_7417.png" alt="Digital design files for commercial craft projects" loading="lazy">
+          </div>
+          <div class="service-info">
+            <h3 class="service-name">Commercial Assets</h3>
+            <p class="service-desc">High-resolution files for professional and personal craft projects.</p>
+          </div>
+        </article>
+
+        <article class="service-card reveal reveal-d3">
+          <div class="service-img">
+            <img src="https://github.com/Stepzach/pdesport/blob/main/IMG_7438.gif?raw=true" alt="Example animated birthday e-card" loading="lazy">
+          </div>
+          <div class="service-info">
+            <h3 class="service-name">Animated E-Cards</h3>
+            <p class="service-desc">Instant GIF greetings for text, email, or social media.</p>
+          </div>
+        </article>
+
+        <article class="service-card reveal reveal-d4">
+          <div class="service-img">
+            <img src="https://github.com/Stepzach/pdesport/blob/main/Untitled_Artwork.gif?raw=true" alt="Visual brand identity elements for a new business" loading="lazy">
+          </div>
+          <div class="service-info">
+            <h3 class="service-name">Brand Identity</h3>
+            <p class="service-desc">Visual storytelling for new businesses, re-brands, and events.</p>
+          </div>
+        </article>
+
+        <article class="service-card reveal reveal-d5">
+          <div class="service-img">
+            <img src="https://ik.imagekit.io/ngoo36zmk/IMG_7424.gif" alt="Bespoke custom illustration commission example" loading="lazy">
+          </div>
+          <div class="service-info">
+            <h3 class="service-name">Custom Commissions</h3>
+            <p class="service-desc">Bespoke portraits, wedding stationery, and event décor.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- PAGE: ART PRINTS GALLERY -->
+<main id="page-menu" class="page" aria-label="Art prints gallery">
+  <section class="sec gallery-sec">
+    <div class="sec-inner">
+      <div class="gallery-header reveal">
+        <div>
+          <p class="sec-label">Shop</p>
+          <h2 class="sec-title" id="gallery-heading">Art <em>Prints</em></h2>
+        </div>
+        <div class="gallery-tabs" id="galleryTabs">
+          <div class="gallery-tabs-skeleton">
+            <div class="tab-skel"></div>
+            <div class="tab-skel"></div>
+            <div class="tab-skel"></div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-grid" id="gallery" role="list" aria-labelledby="gallery-heading">
+        <div class="skel-item" aria-hidden="true"></div>
+        <div class="skel-item" aria-hidden="true"></div>
+        <div class="skel-item" aria-hidden="true"></div>
+        <div class="skel-item" aria-hidden="true"></div>
+        <div class="skel-item" aria-hidden="true"></div>
+        <div class="skel-item" aria-hidden="true"></div>
+        <div class="skel-item" aria-hidden="true"></div>
+        <div class="skel-item" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- PAGE: SINGLE PRINT -->
+<main id="page-print" class="page" aria-label="Print detail">
+  <section class="print-detail-sec">
+    <div class="print-detail-inner">
+      <button class="print-back" id="printBack" aria-label="Back to gallery">
+        <i class="fas fa-arrow-left"></i> Back to prints
+      </button>
+      <div id="printContent">
+        <div class="print-loading"><span class="print-loading-mark">ES</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer" aria-label="Site footer">
+  <div class="footer-top">
+    <div class="footer-col">
+      <p class="footer-brand">Estelle Stephens</p>
+      <p class="footer-tagline">London-based illustrator & designer creating art for brands, homes, and special moments.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Find Me</h4>
+      <nav class="footer-links" aria-label="Social media links">
+        <a href="https://pinterest.com" target="_blank" rel="noopener"><i class="fa-brands fa-pinterest" aria-hidden="true"></i> Pinterest</a>
+        <a href="https://etsy.com" target="_blank" rel="noopener"><i class="fa-brands fa-etsy" aria-hidden="true"></i> Etsy</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a>
+      </nav>
+    </div>
+    <div class="footer-col">
+      <h4>Get in Touch</h4>
+      <nav class="footer-links" aria-label="Contact links">
+        <a href="mailto:hello@estellestephens.com"><i class="fas fa-envelope" aria-hidden="true"></i> hello@estellestephens.com</a>
+      </nav>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Estelle Stephens</span>
+    <a href="/legal">Privacy &amp; Terms</a>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   ROUTES
+   /                  → home
+   /prints            → gallery, first category
+   /prints/:catSlug   → gallery, specific category
+   /print/:slug       → single print detail
+═══════════════════════════════════════════ */
+
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqEPfwqk0ju0h0kXT7IWt9iUoykb6PhJgCPTDNWnmC3zuPTMYbjhG7fzV6dNBs7LZzNeTtysfopkAv/pub?gid=611338961&output=csv';
+
+const C = {
+  category: 'CATEGORY',
+  image:     'IMAGE',
+  etsy:      'ETSY_LINK',
+  alt:       'ALT_TEXT',
+  tags:      'TAGS',
+  title:     'TITLE',
+  pinDesc:   'PIN_DESC',
+};
+
+const printStore    = {};
+const categoryMap   = {};
+const categoryOrder = [];
+
+let allDataLoaded  = false;
+let currentCatSlug = null;
+
+/* ══ HELPERS ══ */
+function get(row, key) {
+  return (row[C[key]] || '').trim();
+}
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+function printSlug(row) {
+  const t = get(row, 'title');
+  if (t) return slugify(t);
+  const img = get(row, 'image');
+  return slugify(img.split('/').pop().replace(/\.[^.]+$/, '') || 'print');
+}
+function catSlug(label) { return slugify(label); }
+
+function setMeta(attr, key, val) {
+  let tag = document.querySelector(`meta[${attr}="${key}"]`);
+  if (!tag) { tag = document.createElement('meta'); tag.setAttribute(attr, key); document.head.appendChild(tag); }
+  tag.setAttribute('content', val);
+}
+
+function injectPrintMeta(row, slug) {
+  const url    = window.location.origin + '/print/' + slug;
+  const image  = get(row, 'image');
+  const title  = get(row, 'title')   || 'Art Print — Estelle Stephens';
+  const desc   = get(row, 'pinDesc') || title;
+
+  document.title = title + ' — Estelle Stephens';
+  setMeta('name',     'description',         desc);
+  setMeta('property', 'og:type',             'website');
+  setMeta('property', 'og:site_name',        'Estelle Stephens');
+  setMeta('property', 'og:url',              url);
+  setMeta('property', 'og:title',            title);
+  setMeta('property', 'og:description',      desc);
+  setMeta('property', 'og:image',            image);
+  setMeta('name',     'twitter:card',        'summary_large_image');
+  setMeta('name',     'twitter:title',       title);
+  setMeta('name',     'twitter:description', desc);
+  setMeta('name',     'twitter:image',       image);
+
+  let canon = document.querySelector('link[rel="canonical"]');
+  if (!canon) { canon = document.createElement('link'); canon.rel = 'canonical'; document.head.appendChild(canon); }
+  canon.href = url;
+}
+
+function resetMeta() {
+  document.title = 'Estelle Stephens — Illustrator & Designer';
+  setMeta('name',     'description',         'London-based illustrator & designer.');
+  setMeta('property', 'og:title',            'Estelle Stephens — Illustrator & Designer');
+  setMeta('property', 'og:description',      'London-based illustrator & designer.');
+  setMeta('property', 'og:image',            '');
+  setMeta('property', 'og:url',              window.location.origin + '/');
+  setMeta('name',     'twitter:title',       'Estelle Stephens — Illustrator & Designer');
+  setMeta('name',     'twitter:description', 'London-based illustrator & designer.');
+  setMeta('name',     'twitter:image',       '');
+}
+
+/* ══ INTERNAL NAVIGATION — all links use this ══ */
+function navigate(path, addToHistory = true) {
+  if (addToHistory) {
+    history.pushState(null, '', path);
+  }
+  routeFromPath();
+}
+
+/* Intercept every <a> that points to an internal path */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a) return;
+  const href = a.getAttribute('href');
+
+  // Let external links, mailto, and target=_blank pass through
+  if (!href || href.startsWith('http') || href.startsWith('mailto') || a.target === '_blank') return;
+  // Let /legal and other non-SPA paths through
+  if (href === '/legal') return;
+
+  e.preventDefault();
+  navigate(href);
+});
+
+/* ══ NAVIGATION UI ══ */
+const burger   = document.getElementById('navBurger');
+const drawer   = document.getElementById('navDrawer');
+const allPages = document.querySelectorAll('.page');
+
+burger.addEventListener('click', () => {
+  const open = drawer.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', open);
+});
+
+function closeDrawer() {
+  drawer.classList.remove('open');
+  burger.classList.remove('open');
+  burger.setAttribute('aria-expanded', false);
+}
+
+function showPage(id) {
+  closeDrawer();
+  allPages.forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + id);
+  if (target) {
+    target.classList.add('active');
+    if (id !== 'print') window.scrollTo({ top: 0, behavior: 'smooth' });
+    observeReveals(target);
+  }
+
+  // Update active state on nav links
+  document.querySelectorAll('[data-navlink]').forEach(l => {
+    l.classList.remove('active');
+  });
+  const activeLink = document.querySelector(`[data-navlink="${id}"]`);
+  if (activeLink) activeLink.classList.add('active');
+}
+
+/* ══ SCROLL REVEAL ══ */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+
+function observeReveals(root = document) {
+  root.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObs.observe(el));
+}
+observeReveals();
+
+/* ══ HERO CAROUSEL ══ */
+async function initCarousel() {
+  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqEPfwqk0ju0h0kXT7IWt9iUoykb6PhJgCPTDNWnmC3zuPTMYbjhG7fzV6dNBs7LZzNeTtysfopkAv/pub?gid=268470262&output=csv';
+  const container = document.getElementById('heroCarousel');
+  if (!container) return;
+  try {
+    const res   = await fetch(csvUrl);
+    const text  = await res.text();
+    const rows  = text.trim().split('\n').slice(1);
+    const slides = [];
+    rows.forEach(row => {
+      const comma = row.indexOf(',');
+      if (comma < 1) return;
+      const url = row.substring(0, comma).trim();
+      const alt = row.substring(comma + 1).replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+      if (!url.startsWith('http')) return;
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      const img = document.createElement('img');
+      img.src = url; img.alt = alt;
+      slide.appendChild(img);
+      container.appendChild(slide);
+      slides.push(slide);
+    });
+    if (!slides.length) return;
+    let cur = Math.floor(Math.random() * slides.length);
+    slides[cur].classList.add('active');
+    if (slides.length > 1) {
+      setInterval(() => {
+        slides[cur].classList.remove('active');
+        cur = (cur + 1) % slides.length;
+        slides[cur].classList.add('active');
+      }, 4500);
+    }
+  } catch (err) { console.warn('Carousel fetch failed:', err); }
+}
+
+/* ══════════════════════════════════════════
+   DATA LOADING + CATEGORY GROUPING
+═══════════════════════════════════════════ */
+function parseSheetData(rows) {
+  categoryOrder.length = 0;
+  Object.keys(categoryMap).forEach(k => delete categoryMap[k]);
+  Object.keys(printStore).forEach(k => delete printStore[k]);
+
+  rows.forEach(row => {
+    const cat = get(row, 'category');
+    const img = get(row, 'image');
+    if (!cat || !img) return;
+
+    const cs = catSlug(cat);
+    const ps = printSlug(row);
+
+    row._catSlug  = cs;
+    row._catLabel = cat;
+    row._slug     = ps;
+
+    printStore[ps] = row;
+
+    if (!categoryMap[cs]) {
+      categoryMap[cs] = { label: cat, rows: [] };
+      categoryOrder.push(cs);
+    }
+    categoryMap[cs].rows.push(row);
+  });
+
+  allDataLoaded = true;
+}
+
+function renderTabs() {
+  const tabsEl = document.getElementById('galleryTabs');
+  tabsEl.innerHTML = '';
+
+  categoryOrder.forEach(cs => {
+    const { label } = categoryMap[cs];
+    const btn = document.createElement('button');
+    btn.className = 'gallery-tab';
+    btn.dataset.catSlug = cs;
+    btn.textContent = label;
+    btn.addEventListener('click', () => {
+      navigate('/prints/' + cs);
+    });
+    tabsEl.appendChild(btn);
+  });
+}
+
+function switchTab(cs) {
+  currentCatSlug = cs;
+
+  document.querySelectorAll('.gallery-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.catSlug === cs);
+  });
+
+  buildGallery(categoryMap[cs]?.rows || []);
+}
+
+/* ══ GALLERY RENDERER ══ */
+const skeletonsHtml = Array(8).fill('<div class="skel-item" aria-hidden="true"></div>').join('');
+
+function buildGallery(rows) {
+  const grid = document.getElementById('gallery');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (!rows.length) {
+    grid.innerHTML = '<p style="padding:40px;color:var(--ink-soft);grid-column:1/-1">No prints in this collection yet.</p>';
+    return;
+  }
+
+  rows.forEach((row, i) => {
+    const slug    = row._slug;
+    const imgUrl  = get(row, 'image');
+    const alt     = get(row, 'alt')     || 'Art print';
+    const etsyUrl = get(row, 'etsy')    || '#';
+    const title   = get(row, 'title')   || 'Art Print';
+    const pinDesc = get(row, 'pinDesc') || '';
+    const printPageUrl = window.location.origin + '/print/' + slug;
+
+    const item = document.createElement('article');
+    item.className = 'gallery-item reveal' + (i % 4 !== 0 ? ` reveal-d${Math.min(i % 4, 4)}` : '');
+    item.setAttribute('role', 'listitem');
+
+    item.innerHTML = `
+      <img src="${imgUrl}" alt="${alt}"
+           data-pin-url="${printPageUrl}"
+           data-pin-media="${imgUrl}"
+           data-pin-description="${pinDesc}"
+           data-pin-title="${title}" loading="lazy">
+      <div class="gallery-overlay" aria-hidden="true">
+        <div class="gallery-overlay-links">
+          ${etsyUrl !== '#' ? `<a href="${etsyUrl}" class="ov-link etsy" target="_blank" rel="noopener" tabindex="-1">
+            <i class="fa-brands fa-etsy"></i> Etsy
+          </a>` : ''}
+          <span class="ov-link pin" tabindex="-1">
+            <i class="fa-brands fa-pinterest"></i> Pin
+          </span>
+        </div>
+      </div>
+    `;
+
+    item.addEventListener('click', e => {
+      if (e.target.closest('.ov-link.etsy')) return;
+      e.preventDefault();
+      navigate('/print/' + slug);
+    });
+
+    grid.appendChild(item);
+  });
+
+  observeReveals(grid);
+  if (window.PinUtils) window.PinUtils.build();
+}
+
+function loadAllPrints(onReady) {
+  const grid = document.getElementById('gallery');
+  if (grid) grid.innerHTML = skeletonsHtml;
+
+  Papa.parse(SHEET_URL, {
+    download: true, header: true, skipEmptyLines: true,
+    complete: r => {
+      parseSheetData(r.data);
+      renderTabs();
+      if (!currentCatSlug && categoryOrder.length) {
+        currentCatSlug = categoryOrder[0];
+      }
+      if (onReady) onReady();
+    },
+    error: () => {
+      if (grid) grid.innerHTML = '<p style="padding:40px;color:var(--ink-soft);grid-column:1/-1">Gallery unavailable. Please try again later.</p>';
+      const tabsEl = document.getElementById('galleryTabs');
+      if (tabsEl) tabsEl.innerHTML = '';
+    }
+  });
+}
+
+/* ══ PRINT DETAIL ══ */
+function openPrint(row, slug) {
+  renderPrintPage(row, slug);
+  showPage('print');
+  injectPrintMeta(row, slug);
+}
+
+function renderPrintPage(row, slug) {
+  const imgUrl   = get(row, 'image');
+  const alt      = get(row, 'alt')     || 'Art print';
+  const title    = get(row, 'title')   || 'Art Print';
+  const pinDesc  = get(row, 'pinDesc') || '';
+  const etsyUrl  = get(row, 'etsy')    || '#';
+  const tagsRaw  = get(row, 'tags');
+  const catLabel = row._catLabel || '';
+  const catSlugVal = row._catSlug || '';
+
+  const tagsHtml = tagsRaw
+    ? tagsRaw.split(',').map(t => `<span class="print-tag">${t.trim()}</span>`).join('')
+    : '';
+
+  const printPageUrl = window.location.origin + '/print/' + slug;
+  const pinSaveUrl   = 'https://www.pinterest.com/pin/create/button/'
+    + '?url='         + encodeURIComponent(printPageUrl)
+    + '&media='       + encodeURIComponent(imgUrl)
+    + '&description=' + encodeURIComponent(title + ' - ' + pinDesc)
+    + '&title='       + encodeURIComponent(title);
+
+  document.getElementById('printContent').innerHTML = `
+    <div class="print-layout">
+      <div class="print-image-wrap">
+        <img src="${imgUrl}" alt="${alt}"
+             data-pin-url="${printPageUrl}"
+             data-pin-media="${imgUrl}"
+             data-pin-description="${pinDesc}"
+             data-pin-title="${title}">
+      </div>
+      <div class="print-info">
+        ${catLabel ? `<p class="print-collection-label">${catLabel}</p>` : ''}
+        <h1 class="print-title">${title}</h1>
+        ${pinDesc  ? `<p class="print-description">${pinDesc}</p>` : ''}
+        ${tagsHtml ? `<div class="print-tags">${tagsHtml}</div>` : ''}
+        <hr class="print-divider">
+        <div class="print-actions">
+          ${etsyUrl !== '#' ? `
+          <a href="${etsyUrl}" class="print-btn-etsy" target="_blank" rel="noopener">
+            <i class="fa-brands fa-etsy"></i> Shop on Etsy
+          </a>` : ''}
+          <button onclick="window.open('${pinSaveUrl}','Pinterest','width=600,height=700');return false;" class="print-btn-pin">
+            <i class="fa-brands fa-pinterest"></i> Save to Pinterest
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Store catSlug for the back button
+  currentCatSlug = catSlugVal || currentCatSlug || categoryOrder[0] || null;
+
+  if (window.PinUtils) window.PinUtils.build();
+}
+
+/* Back button — returns to the category the print belongs to */
+document.getElementById('printBack').addEventListener('click', () => {
+  const cs = currentCatSlug || categoryOrder[0] || '';
+  navigate('/prints/' + cs);
+});
+
+/* ══════════════════════════════════════════
+   ROUTER — reads window.location.pathname
+═══════════════════════════════════════════ */
+function routeFromPath() {
+  const path = window.location.pathname;
+
+  /* ── /print/:slug ── detail page */
+  const printMatch = path.match(/^\/print\/([^/]+)\/?$/);
+  if (printMatch) {
+    const slug = printMatch[1];
+    const tryOpen = () => {
+      const row = printStore[slug];
+      if (row) {
+        openPrint(row, slug);
+      } else {
+        // slug not found — fall back to gallery
+        const cs = currentCatSlug || categoryOrder[0] || null;
+        if (cs) {
+          history.replaceState(null, '', '/prints/' + cs);
+          showPage('menu');
+          switchTab(cs);
+        } else {
+          history.replaceState(null, '', '/prints');
+          showPage('menu');
+        }
+      }
+    };
+    if (allDataLoaded) {
+      tryOpen();
+    } else {
+      loadAllPrints(tryOpen);
+    }
+    return;
+  }
+
+  /* ── /prints/:catSlug ── gallery with specific tab */
+  const printsMatch = path.match(/^\/prints\/([^/]+)\/?$/);
+  if (printsMatch) {
+    const cs = printsMatch[1];
+    showPage('menu');
+    const activate = () => {
+      const target = categoryMap[cs] ? cs : (categoryOrder[0] || null);
+      if (target) switchTab(target);
+    };
+    if (allDataLoaded) {
+      activate();
+    } else {
+      loadAllPrints(activate);
+    }
+    return;
+  }
+
+  /* ── /prints ── gallery, first tab */
+  if (path === '/prints' || path === '/prints/') {
+    showPage('menu');
+    const activate = () => {
+      if (categoryOrder.length) switchTab(categoryOrder[0]);
+    };
+    if (allDataLoaded) {
+      activate();
+    } else {
+      loadAllPrints(activate);
+    }
+    return;
+  }
+
+  /* ── / ── home */
+  if (path === '/' || path === '') {
+    showPage('home');
+    resetMeta();
+    return;
+  }
+
+  /* ── unknown path — fall back to home ── */
+  history.replaceState(null, '', '/');
+  showPage('home');
+  resetMeta();
+}
+
+/* popstate fires when the user hits back/forward */
+window.addEventListener('popstate', routeFromPath);
+
+/* ══ INIT ══ */
+window.addEventListener('load', () => {
+  document.getElementById('loader').classList.add('gone');
+  initCarousel();
+
+  const path = window.location.pathname;
+  const needsGallery = path.startsWith('/prints') || path.startsWith('/print');
+
+  if (needsGallery && !allDataLoaded) {
+    // Load data first, then route — avoids double-fetch
+    loadAllPrints(() => routeFromPath());
+  } else {
+    routeFromPath();
+    // Pre-fetch gallery data in the background for faster tab switching
+    if (!allDataLoaded) loadAllPrints(null);
+  }
+});
+</script>
+</body>
+</html>
