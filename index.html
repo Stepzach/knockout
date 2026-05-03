@@ -571,15 +571,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 #page-print.active { display: block; }
 .print-detail-sec { padding-top: 20px; }
 
+/* Find this in your <style> tag and replace it */
 .print-description,
 .print-tags {
   position: absolute;
   width: 1px;
   height: 1px;
   padding: 0;
-  opacity: 0.01;
-  position: absolute;
-  pointer-events: none;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 </style>
 </head>
@@ -1120,11 +1123,12 @@ function renderPrintPage(row, slug) {
     : '';
 
   const printPageUrl = window.location.origin + '/print/' + slug;
-  const pinSaveUrl   = 'https://www.pinterest.com/pin/create/button/'
-    + '?url='         + encodeURIComponent(printPageUrl)
-    + '&media='       + encodeURIComponent(imgUrl)
-    + '&description=' + encodeURIComponent(title + ' - ' + pinDesc)
-    + '&title='       + encodeURIComponent(title);
+  // Inside renderPrintPage(row, slug)
+const pinSaveUrl = 'https://www.pinterest.com/pin/create/button/'
+    + '?url='           + encodeURIComponent(printPageUrl)
+    + '&media='         + encodeURIComponent(imgUrl)
+    + '&description='   + encodeURIComponent(pinDesc) // Keep this clean
+    + '&title='         + encodeURIComponent(title);
 
   document.getElementById('printContent').innerHTML = `
     <div class="print-layout">
@@ -1146,9 +1150,14 @@ function renderPrintPage(row, slug) {
           <a href="${etsyUrl}" class="print-btn-etsy" target="_blank" rel="noopener">
             <i class="fa-brands fa-etsy"></i> Shop on Etsy
           </a>` : ''}
-          <button onclick="window.open('${pinSaveUrl}','Pinterest','width=600,height=700');return false;" class="print-btn-pin">
-            <i class="fa-brands fa-pinterest"></i> Save to Pinterest
-          </button>
+         <button 
+  onclick="window.open('${pinSaveUrl}','Pinterest','width=600,height=700');return false;" 
+  class="print-btn-pin"
+  data-pin-custom="true"
+  data-pin-log="button"
+  data-pin-href="${pinSaveUrl}">
+    <i class="fa-brands fa-pinterest"></i> Save to Pinterest
+</button>
         </div>
       </div>
     </div>
