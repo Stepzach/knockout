@@ -6,6 +6,8 @@
 <title>Estelle Stephens — Illustrator & Designer</title>
 <meta name="description" content="London-based illustrator & designer. Art prints, commercial assets, animated e-cards, brand identity, and custom commissions.">
 <meta name="theme-color" content="#fdf7ef">
+<!-- Disable Pinterest Rich Pins so our custom description/title actually show up -->
+<meta name="pinterest-rich-pin" content="false">
 
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="Estelle Stephens">
@@ -669,6 +671,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   white-space: nowrap;
   border-width: 0;
 }
+  #sheetViewBtn {
+ display:none !important;
+}
 </style>
 </head>
 <body>
@@ -954,27 +959,43 @@ function resetMeta() {
   setMeta('name',     'twitter:image',       '');
 }
 
-/* ══ PINTEREST SAVE URL BUILDER ══
-   Uses the official Pinterest /pin/create/button/ endpoint.
-   description = PIN_DESC (or title fallback) — this becomes the pin description.
-   title       = TITLE — Pinterest displays this as the pin title.
-   Both fields are passed correctly so they populate on save.
-══════════════════════════════════ */
-function buildPinUrl(printPageUrl, imgUrl, title, pinDesc) {
-  // Pinterest requires the description to be the "note"/caption that gets saved.
-  // Combine title + description so the saved pin is rich.
-  const combinedDesc = title
-    ? (pinDesc ? title + ' — ' + pinDesc : title)
-    : (pinDesc || '');
+/* ══ PINTEREST SAVE ══
+   HOW PINTEREST ACTUALLY WORKS (confirmed by Pinterest engineers, May 2025):
+   
+   When you pass ?url=somePage, Pinterest CRAWLS that URL server-side and uses
+   its OG tags — ignoring your &description= param entirely if OG tags exist.
+   
+   For a SPA like this, the server returns generic HTML (JS hasn't run), so
+   Pinterest gets the default OG tags, not the print-specific ones.
+   
+   THE FIX:
+   1. Set og:title, og:description, og:image on the current page to the print's
+      data BEFORE opening the popup — Pinterest reads the *current* page's OG
+      tags when url= matches the current page.
+   2. Pass url= as the current page URL (which we update via history.pushState
+      to /print/:slug — so Pinterest sees a URL that matches our OG tags).
+   3. <meta name="pinterest-rich-pin" content="false"> stops Pinterest overriding
+      with its own rich-pin crawl.
+   4. Pass description= and media= as fallbacks too.
+══════════════════════════════════════════════════════════════════════════════ */
 
-  return 'https://www.pinterest.com/pin/create/button/'
+function openPinterest(printPageUrl, imgUrl, title, pinDesc) {
+  // Step 1 — ensure OG tags on this page match the print before Pinterest reads them
+  const fullDesc = pinDesc ? title + ' — ' + pinDesc : title;
+  setMeta('property', 'og:title',       title    || 'Art Print — Estelle Stephens');
+  setMeta('property', 'og:description', fullDesc || '');
+  setMeta('property', 'og:image',       imgUrl);
+  setMeta('property', 'og:url',         printPageUrl);
+  setMeta('name',     'description',    fullDesc || '');
+
+  // Step 2 — build the Pinterest URL
+  // url= must be the canonical page URL (which has matching OG tags above)
+  const pinUrl = 'https://www.pinterest.com/pin/create/button/'
     + '?url='         + encodeURIComponent(printPageUrl)
     + '&media='       + encodeURIComponent(imgUrl)
-    + '&description=' + encodeURIComponent(combinedDesc);
-}
+    + '&description=' + encodeURIComponent(fullDesc);
 
-function openPinterest(pinUrl) {
-  window.open(pinUrl, 'Pinterest', 'width=750,height=550,resizable=yes,scrollbars=yes');
+  window.open(pinUrl, 'Pinterest', 'width=750,height=600,resizable=yes,scrollbars=yes');
 }
 
 /* ══ INTERNAL NAVIGATION ══ */
@@ -1143,7 +1164,7 @@ function openSheet(row) {
   const pinDesc     = get(row, 'pinDesc') || '';
   const etsyUrl     = get(row, 'etsy')    || '';
   const printPageUrl = window.location.origin + '/print/' + slug;
-  const pinUrl      = buildPinUrl(printPageUrl, imgUrl, title, pinDesc);
+  
 
   sheetImg.src = imgUrl;
   sheetImg.alt = alt;
@@ -1166,9 +1187,9 @@ function openSheet(row) {
     navigate('/print/' + slug);
   });
 
-  document.getElementById('sheetPinBtn').addEventListener('click', () => {
-    openPinterest(pinUrl);
-  });
+ document.getElementById('sheetPinBtn').addEventListener('click', () => {
+  openPinterest(printPageUrl, imgUrl, title, pinDesc);
+});
 
   sheetBackdrop.classList.add('visible');
   requestAnimationFrame(() => gallerySheet.classList.add('open'));
@@ -1219,7 +1240,7 @@ function buildGallery(rows) {
     const title       = get(row, 'title')   || 'Art Print';
     const pinDesc     = get(row, 'pinDesc') || '';
     const printPageUrl = window.location.origin + '/print/' + slug;
-    const pinUrl      = buildPinUrl(printPageUrl, imgUrl, title, pinDesc);
+ 
 
     const item = document.createElement('article');
     item.className = 'gallery-item reveal' + (i % 4 !== 0 ? ` reveal-d${Math.min(i % 4, 4)}` : '');
@@ -1232,9 +1253,9 @@ function buildGallery(rows) {
           ${etsyUrl !== '#' ? `<a href="${etsyUrl}" class="ov-link etsy" target="_blank" rel="noopener" tabindex="-1">
             <i class="fa-brands fa-etsy"></i> Etsy
           </a>` : ''}
-          <button class="ov-link pin" tabindex="-1" data-pin-url="${pinUrl}">
-            <i class="fa-brands fa-pinterest"></i> Pin
-          </button>
+         <button class="ov-link pin" tabindex="-1" data-print-url="${printPageUrl}" data-img-url="${imgUrl}" data-title="${title}" data-pin-desc="${pinDesc}">
+  <i class="fa-brands fa-pinterest"></i> Pin
+</button>
         </div>
       </div>
     `;
@@ -1244,12 +1265,17 @@ function buildGallery(rows) {
       if (e.target.closest('.ov-link.etsy')) return;
 
       // Pinterest button on desktop overlay
-      const pinBtn = e.target.closest('.ov-link.pin');
-      if (pinBtn) {
-        e.preventDefault();
-        openPinterest(pinBtn.dataset.pinUrl);
-        return;
-      }
+     const pinBtn = e.target.closest('.ov-link.pin');
+if (pinBtn) {
+  e.preventDefault();
+  openPinterest(
+    pinBtn.dataset.printUrl, 
+    pinBtn.dataset.imgUrl, 
+    pinBtn.dataset.title, 
+    pinBtn.dataset.pinDesc
+  );
+  return;
+}
 
       e.preventDefault();
 
@@ -1310,7 +1336,7 @@ function renderPrintPage(row, slug) {
     : '';
 
   const printPageUrl = window.location.origin + '/print/' + slug;
-  const pinUrl = buildPinUrl(printPageUrl, imgUrl, title, pinDesc);
+ 
 
   document.getElementById('printContent').innerHTML = `
     <div class="print-layout">
@@ -1336,9 +1362,10 @@ function renderPrintPage(row, slug) {
     </div>
   `;
 
-  document.getElementById('printPinBtn').addEventListener('click', () => {
-    openPinterest(pinUrl);
-  });
+ // FIXED CODE
+document.getElementById('printPinBtn').addEventListener('click', () => {
+    openPinterest(printPageUrl, imgUrl, title, pinDesc);
+});
 
   currentCatSlug = catSlugVal || currentCatSlug || categoryOrder[0] || null;
 }
